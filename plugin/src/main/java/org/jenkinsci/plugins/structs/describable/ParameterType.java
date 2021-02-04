@@ -46,7 +46,7 @@ public abstract class ParameterType {
                     return new AtomicType(c);
                 }
                 if (Enum.class.isAssignableFrom(c)) {
-                    List<String> constants = new ArrayList<String>();
+                    List<String> constants = new ArrayList<>();
                     for (Enum<?> value : c.asSubclass(Enum.class).getEnumConstants()) {
                         constants.add(value.name());
                     }
@@ -68,16 +68,13 @@ public abstract class ParameterType {
                     return new HomogeneousObjectType(c);
                 } else {
                     // Definitely heterogeneous.
-                    Map<String,List<Class<?>>> subtypesBySimpleName = new HashMap<String,List<Class<?>>>();
+                    Map<String,List<Class<?>>> subtypesBySimpleName = new HashMap<>();
                     for (Class<?> subtype : subtypes) {
                         String simpleName = subtype.getSimpleName();
-                        List<Class<?>> bySimpleName = subtypesBySimpleName.get(simpleName);
-                        if (bySimpleName == null) {
-                            subtypesBySimpleName.put(simpleName, bySimpleName = new ArrayList<Class<?>>());
-                        }
+                        List<Class<?>> bySimpleName = subtypesBySimpleName.computeIfAbsent(simpleName, k -> new ArrayList<>());
                         bySimpleName.add(subtype);
                     }
-                    Map<String,DescribableModel<?>> types = new TreeMap<String,DescribableModel<?>>();
+                    Map<String,DescribableModel<?>> types = new TreeMap<>();
                     for (Map.Entry<String,List<Class<?>>> entry : subtypesBySimpleName.entrySet()) {
                         if (entry.getValue().size() == 1) { // normal case: unambiguous via simple name
                             try {
@@ -112,7 +109,7 @@ public abstract class ParameterType {
     @Override
     public final String toString() {
         StringBuilder b = new StringBuilder();
-        toString(b, new Stack<Class<?>>());
+        toString(b, new Stack<>());
         return b.toString();
     }
 

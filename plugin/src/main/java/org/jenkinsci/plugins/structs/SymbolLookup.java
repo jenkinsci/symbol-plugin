@@ -33,9 +33,9 @@ import java.util.logging.Logger;
  */
 @Extension
 public class SymbolLookup {
-    private final ConcurrentMap<Key,Object> cache = new ConcurrentHashMap<Key, Object>();
+    private final ConcurrentMap<Key,Object> cache = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<Key,Object> noHitCache = new ConcurrentHashMap<Key, Object>();
+    private final ConcurrentMap<Key,Object> noHitCache = new ConcurrentHashMap<>();
 
     static final Object NO_HIT = new Object();
 
@@ -48,7 +48,7 @@ public class SymbolLookup {
     Set<String> pluginNames = Collections.EMPTY_SET;
 
     private static HashSet<String> pluginsToNames(List<PluginWrapper> plugins) {
-        HashSet<String> pluginNames = new HashSet<String>(plugins.size());
+        HashSet<String> pluginNames = new HashSet<>(plugins.size());
         for (PluginWrapper pw : plugins) {
             pluginNames.add(pw.getShortName());
         }
@@ -198,7 +198,7 @@ public class SymbolLookup {
      * Gets the singleton instance.
      */
     public static SymbolLookup get() {
-        Jenkins j = Jenkins.getInstance();
+        Jenkins j = Jenkins.getInstanceOrNull();
         if (j == null) {
             throw new IllegalStateException();
         }
@@ -231,7 +231,7 @@ public class SymbolLookup {
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
             justification = "Jenkins.getInstance() can return null in theory.")
     @Nonnull public static Set<String> getSymbolValue(@Nonnull Class<?> c) {
-        Set<String> symbolValues = new LinkedHashSet<String>();
+        Set<String> symbolValues = new LinkedHashSet<>();
         Jenkins j = Jenkins.getInstanceOrNull();
         if (Describable.class.isAssignableFrom(c) && !Descriptor.class.isAssignableFrom(c) && j != null) {
             Descriptor<?> d = j.getDescriptor(c.asSubclass(Describable.class));

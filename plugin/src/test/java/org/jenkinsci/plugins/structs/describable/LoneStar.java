@@ -7,6 +7,8 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import javax.annotation.Nonnull;
+
 /**
  * To test a single argument Describable
  *
@@ -31,6 +33,7 @@ public class LoneStar extends AbstractDescribableImpl<LoneStar> {
     @Symbol("texas")
     public static class DescriptorImpl extends Descriptor<LoneStar> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "Lone star state";
         }

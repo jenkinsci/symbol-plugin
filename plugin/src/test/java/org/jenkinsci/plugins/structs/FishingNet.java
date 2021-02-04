@@ -6,6 +6,8 @@ import hudson.model.Descriptor;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 /**
  * "net" symbols are on two descriptors.
  *
@@ -20,6 +22,7 @@ public class FishingNet extends AbstractDescribableImpl<FishingNet> implements F
     @Extension @Symbol("net")
     public static class DescriptorImpl extends Descriptor<FishingNet> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "fishing net";
         }

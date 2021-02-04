@@ -6,10 +6,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.Url;
 
 import java.io.File;
-import java.net.URI;
 
 /**
  * @author Sam Van Oort

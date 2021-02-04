@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableMap;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.BooleanParameterValue;
-import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.ParameterValue;
 import hudson.model.ParametersDefinitionProperty;
@@ -52,6 +51,7 @@ import org.jvnet.hudson.test.LoggerRule;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -99,7 +99,7 @@ public class DescribableModelTest {
     }
 
     private <T> T instantiate(Class<T> type, Map<String, Object> args) throws Exception {
-        return new DescribableModel<T>(type).instantiate(args);
+        return new DescribableModel<>(type).instantiate(args);
     }
 
     @Test public void uninstantiate() throws Exception {
@@ -136,7 +136,7 @@ public class DescribableModelTest {
         assertEquals("Implementation #1", schema.getDisplayName());
         assertEquals("<div>Overall help.</div>", schema.getHelp());
         assertEquals("<div>The text to display.</div>", schema.getParameter("text").getHelp());
-        schema = new DescribableModel<C>(C.class);
+        schema = new DescribableModel<>(C.class);
         assertEquals("C", schema.getDisplayName());
         assertNull(schema.getHelp());
         assertNull(schema.getParameter("text").getHelp());
@@ -328,7 +328,7 @@ public class DescribableModelTest {
     public static abstract class SomeImplsBroken extends AbstractDescribableImpl<SomeImplsBroken> {}
     public static class BrokenImpl extends SomeImplsBroken {
         @Extension public static class DescriptorImpl extends Descriptor<SomeImplsBroken> {
-            @Override public String getDisplayName() {
+            @Override @Nonnull public String getDisplayName() {
                 return "BrokenImpl";
             }
         }
@@ -336,7 +336,7 @@ public class DescribableModelTest {
     public static class FineImpl extends SomeImplsBroken {
         @DataBoundConstructor public FineImpl() {}
         @Extension public static class DescriptorImpl extends Descriptor<SomeImplsBroken> {
-            @Override public String getDisplayName() {
+            @Override @Nonnull public String getDisplayName() {
                 return "FineImpl";
             }
         }
@@ -557,7 +557,7 @@ public class DescribableModelTest {
     }
 
     @Test public void defaultValuesStructCollectionCommon() throws Exception {
-        roundTrip(DefaultStructCollection.class, map("bases", Arrays.asList(map(CLAZZ, "Impl1", "text", "special"))), "DefaultStructCollection[Impl1[special]]");
+        roundTrip(DefaultStructCollection.class, map("bases", Collections.singletonList(map(CLAZZ, "Impl1", "text", "special"))), "DefaultStructCollection[Impl1[special]]");
     }
 
     @Test public void defaultValuesStructCollectionEmpty() throws Exception {
@@ -580,7 +580,7 @@ public class DescribableModelTest {
     }
 
     public static final class DefaultStructCollection {
-        private Collection<Base> bases = Arrays.<Base>asList(new Impl1("default"));
+        private Collection<Base> bases = Collections.singletonList(new Impl1("default"));
         @DataBoundConstructor public DefaultStructCollection() {}
         public Collection<Base> getBases() {return bases;}
         @DataBoundSetter public void setBases(Collection<Base> bases) {this.bases = bases;}
@@ -588,7 +588,7 @@ public class DescribableModelTest {
     }
 
     @Test public void defaultValuesStructArrayCommon() throws Exception {
-        roundTrip(DefaultStructArray.class, map("bases", Arrays.asList(map(CLAZZ, "Impl1", "text", "special")), "stuff", "val"), "DefaultStructArray[Impl1[special]];stuff=val");
+        roundTrip(DefaultStructArray.class, map("bases", Collections.singletonList(map(CLAZZ, "Impl1", "text", "special")), "stuff", "val"), "DefaultStructArray[Impl1[special]];stuff=val");
     }
 
     @Issue("JENKINS-25779")
@@ -630,7 +630,7 @@ public class DescribableModelTest {
                 map(CLAZZ, "StringParameterValue", "name", "n", "value", "stuff"),
                 map(CLAZZ, "TextParameterValue", "name", "text", "value", "here\nthere"))),
             "TakesParams;BooleanParameterValue:flag=true;StringParameterValue:n=stuff;TextParameterValue:text=here\nthere");
-        assertEquals("(parameters=[@booleanParam$BooleanParameterValue(name=flag,value=true)])", DescribableModel.uninstantiate2_(new TakesParams(Collections.<ParameterValue>singletonList(new BooleanParameterValue("flag", true)))).toString());
+        assertEquals("(parameters=[@booleanParam$BooleanParameterValue(name=flag,value=true)])", DescribableModel.uninstantiate2_(new TakesParams(Collections.singletonList(new BooleanParameterValue("flag", true)))).toString());
     }
     public static final class TakesParams {
         public final List<ParameterValue> parameters;
@@ -655,9 +655,9 @@ public class DescribableModelTest {
     @Issue("JENKINS-26619")
     @Test public void getterDescribableList() throws Exception {
         roundTrip(GitSCM.class, map(
-            "extensions", Arrays.asList(map(CLAZZ, CleanBeforeCheckout.class.getSimpleName())),
+            "extensions", Collections.singletonList(map(CLAZZ, CleanBeforeCheckout.class.getSimpleName())),
             // Default values for these things do not work because GitSCM fails to use @DataBoundSetter:
-            "branches", Arrays.asList(map("name", "*/master")),
+            "branches", Collections.singletonList(map("name", "*/master")),
             "doGenerateSubmoduleConfigurations", false,
             "submoduleCfg", Collections.emptyList(),
             "userRemoteConfigs", Collections.emptyList()));
@@ -722,7 +722,7 @@ public class DescribableModelTest {
         LoneStar star = new LoneStar("foo");
         star.setCapital("Should be Dallas");
         UninstantiatedDescribable y = dc.uninstantiate2(star);
-        assertTrue(!y.hasSoleRequiredArgument());
+        assertFalse(y.hasSoleRequiredArgument());
     }
 
     @Test
@@ -752,7 +752,7 @@ public class DescribableModelTest {
         IntAndBool intAndBool = (IntAndBool) new UninstantiatedDescribable("intAndBool", null,
                 ImmutableMap.<String, Object>of("i", "5", "b", "true")).instantiate();
         assertEquals(5, intAndBool.i);
-        assertEquals(true, intAndBool.b);
+        assertTrue(intAndBool.b);
     }
 
     @Test
@@ -830,7 +830,7 @@ public class DescribableModelTest {
     public void ambiguousTopLevelSimpleNameInList() throws Exception {
         SharedName first = new SharedName("first");
         first.setTwo("something");
-        AmbiguousListContainer container = new AmbiguousListContainer(Arrays.<Describable<?>>asList(first,
+        AmbiguousListContainer container = new AmbiguousListContainer(Arrays.asList(first,
                 new UnambiguousClassName("second")));
 
         UninstantiatedDescribable ud = DescribableModel.uninstantiate2_(container);
@@ -891,7 +891,7 @@ public class DescribableModelTest {
         if (keysAndValues.length % 2 != 0) {
             throw new IllegalArgumentException();
         }
-        Map<String,Object> m = new TreeMap<String,Object>();
+        Map<String,Object> m = new TreeMap<>();
         for (int i = 0; i < keysAndValues.length; i += 2) {
             m.put((String) keysAndValues[i], keysAndValues[i + 1]);
         }
@@ -1003,7 +1003,7 @@ public class DescribableModelTest {
     @Issue("JENKINS-44864")
     public void given_model_when_fieldRenamed_then_uselessSettersIgnored() throws Exception {
         EvolvedClass instance;
-        Map<String,Object> expected = new HashMap<String, Object>();
+        Map<String,Object> expected = new HashMap<>();
 
         instance = new EvolvedClass(false);
         expected.clear();

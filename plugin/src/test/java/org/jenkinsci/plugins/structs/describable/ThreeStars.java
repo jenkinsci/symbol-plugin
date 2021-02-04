@@ -6,6 +6,8 @@ import hudson.model.Descriptor;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Kohsuke Kawaguchi
  * @see <a href="https://en.wikipedia.org/wiki/Flag_of_Tennessee">Tennessee state flag</a>
@@ -28,6 +30,7 @@ public class ThreeStars extends AbstractDescribableImpl<ThreeStars> {
     @Symbol("tennessee")
     public static class DescriptorImpl extends Descriptor<ThreeStars> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "Tri-star state";
         }

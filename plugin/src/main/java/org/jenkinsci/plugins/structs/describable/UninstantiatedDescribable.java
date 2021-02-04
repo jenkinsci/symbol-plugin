@@ -7,10 +7,10 @@ import org.jenkinsci.Symbol;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TreeMap;
 import javax.annotation.CheckForNull;
 
@@ -139,7 +139,7 @@ public class UninstantiatedDescribable implements Serializable {
      * Converts this {@link UninstantiatedDescribable} to a literal map expression without recursively doing so for children.
      */
     public Map<String,Object> toShallowMap() {
-        Map<String,Object> r = new TreeMap<String, Object>(arguments);
+        Map<String,Object> r = new TreeMap<>(arguments);
         if (klass !=null)
             r.put(DescribableModel.CLAZZ, klass);
 // there's no use writing both $class and $symbol. $symbol is little more readable, but given that this is already
@@ -221,8 +221,8 @@ public class UninstantiatedDescribable implements Serializable {
 
         UninstantiatedDescribable that = (UninstantiatedDescribable) o;
 
-        if (symbol != null ? !symbol.equals(that.symbol) : that.symbol != null) return false;
-        if (klass != null ? !klass.equals(that.klass) : that.klass != null) return false;
+        if (!Objects.equals(symbol, that.symbol)) return false;
+        if (!Objects.equals(klass, that.klass)) return false;
         return arguments.equals(that.arguments);
 
     }

@@ -131,7 +131,7 @@ public final class DescribableParameter {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        toString(b, new Stack<Class<?>>());
+        toString(b, new Stack<>());
         return b.toString();
     }
 
@@ -179,13 +179,13 @@ public final class DescribableParameter {
             return o.toString();
         } else if (o instanceof Object[]) {
             Object[] array = (Object[]) o;
-            List<Object> list = new ArrayList<Object>(array.length);
+            List<Object> list = new ArrayList<>(array.length);
             for (Object elt : array) {
                 list.add(uncoerce(elt, array.getClass().getComponentType()));
             }
             return list;
         } else if (o instanceof Collection && Types.isSubClassOf(type, Collection.class)) {
-            List<Object> list = new ArrayList<Object>(((Collection) o).size());
+            List<Object> list = new ArrayList<>(((Collection) o).size());
             for (Object elt : (Collection<?>) o) {
                 list.add(uncoerce(elt, Types.getTypeArgument(Types.getBaseClass(type,Collection.class),0,Object.class)));
             }

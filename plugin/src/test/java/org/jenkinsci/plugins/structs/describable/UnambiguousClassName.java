@@ -29,6 +29,8 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 public class UnambiguousClassName extends AbstractDescribableImpl<UnambiguousClassName> {
     public final String one;
 
@@ -40,6 +42,7 @@ public class UnambiguousClassName extends AbstractDescribableImpl<UnambiguousCla
     @Extension
     public static class DescriptorImpl extends Descriptor<UnambiguousClassName> {
         @Override
+        @Nonnull
         public String getDisplayName() {
                 return "An unambiguous describable";
             }

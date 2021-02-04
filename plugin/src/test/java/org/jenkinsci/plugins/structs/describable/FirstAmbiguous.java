@@ -29,6 +29,8 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 public class FirstAmbiguous {
     public static class CommonName extends AbstractDescribableImpl<CommonName> {
         public final String one;
@@ -41,6 +43,7 @@ public class FirstAmbiguous {
         @Extension
         public static class DescriptorImpl extends Descriptor<CommonName> {
             @Override
+            @Nonnull
             public String getDisplayName() {
                 return "FirstAmbiguous$CommonName";
             }

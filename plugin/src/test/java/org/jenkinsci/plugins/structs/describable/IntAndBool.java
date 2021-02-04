@@ -31,6 +31,8 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import javax.annotation.Nonnull;
+
 /**
  * Testing coercion of strings to numbers and booleans
  *
@@ -55,6 +57,7 @@ public class IntAndBool extends AbstractDescribableImpl<IntAndBool> {
     @Symbol("intAndBool")
     public static class DescriptorImpl extends Descriptor<IntAndBool> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "An integer and a boolean";
         }

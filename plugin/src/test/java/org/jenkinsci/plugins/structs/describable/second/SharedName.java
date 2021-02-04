@@ -26,9 +26,10 @@ package org.jenkinsci.plugins.structs.describable.second;
 
 import hudson.Extension;
 import hudson.model.Descriptor;
-import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.structs.describable.AbstractSharedName;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import javax.annotation.Nonnull;
 
 public class SharedName extends AbstractSharedName {
     public final String two;
@@ -41,6 +42,7 @@ public class SharedName extends AbstractSharedName {
     @Extension
     public static class DescriptorImpl extends Descriptor<AbstractSharedName> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "second.SharedName";
         }

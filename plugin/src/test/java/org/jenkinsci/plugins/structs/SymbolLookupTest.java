@@ -53,8 +53,8 @@ public class SymbolLookupTest {
     @Test
     public void test() {
         assertNull(lookup.find(Object.class, "zoo"));
-        assertThat((Foo) lookup.find(Object.class, "foo"), is(sameInstance(this.foo)));
-        assertThat((Bar) lookup.find(Object.class, "bar"), is(sameInstance(this.bar)));
+        assertThat(lookup.find(Object.class, "foo"), is(sameInstance(this.foo)));
+        assertThat(lookup.find(Object.class, "bar"), is(sameInstance(this.bar)));
 
         // even if the symbol matches, if the type isn't valid the return value will be null
         assertNull(lookup.find(String.class, "foo"));
@@ -109,7 +109,7 @@ public class SymbolLookupTest {
     public static class SomeConfiguration extends GlobalConfiguration {}
 
     @Issue("JENKINS-57218")
-    @Test public void descriptorSansExtension() throws Exception {
+    @Test public void descriptorSansExtension() {
         SymbolLookup sl = rule.jenkins.getExtensionList(SymbolLookup.class).get(0);
         errors.checkThat("A is registered", sl.findDescriptor(Stuff.class, "a"), is(instanceOf(StuffA.DescriptorImpl.class)));
         errors.checkThat("B is not", sl.findDescriptor(Stuff.class, "b"), nullValue());

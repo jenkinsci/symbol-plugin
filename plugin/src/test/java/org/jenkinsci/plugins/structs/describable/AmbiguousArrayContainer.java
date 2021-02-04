@@ -30,6 +30,8 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 public class AmbiguousArrayContainer extends AbstractDescribableImpl<AmbiguousArrayContainer> {
     private final Describable<?>[] array;
 
@@ -45,6 +47,7 @@ public class AmbiguousArrayContainer extends AbstractDescribableImpl<AmbiguousAr
     @Extension
     public static class DescriptorImpl extends Descriptor<AmbiguousArrayContainer> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "ambiguous array container";
         }

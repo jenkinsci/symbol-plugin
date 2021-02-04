@@ -30,6 +30,8 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 public class AmbiguousContainer extends AbstractDescribableImpl<AmbiguousContainer> {
     public final Describable<?> ambiguous;
     public final Describable<?> unambiguous;
@@ -43,6 +45,7 @@ public class AmbiguousContainer extends AbstractDescribableImpl<AmbiguousContain
     @Extension
     public static class DescriptorImpl extends Descriptor<AmbiguousContainer> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "ambiguous container";
         }

@@ -30,19 +30,23 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import javax.annotation.Nonnull;
 
 public class AmbiguousListContainer extends AbstractDescribableImpl<AmbiguousListContainer> {
     public final List<Describable<?>> list;
 
     @DataBoundConstructor
     public AmbiguousListContainer(List<Describable<?>> list) {
-        this.list = new ArrayList<Describable<?>>(list);
+        this.list = new ArrayList<>(list);
     }
 
     @Extension
     public static class DescriptorImpl extends Descriptor<AmbiguousListContainer> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "ambiguous list container";
         }

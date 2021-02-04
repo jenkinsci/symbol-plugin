@@ -6,6 +6,8 @@ import hudson.model.Descriptor;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
+
 /**
  * "rod" symbol
  *
@@ -20,6 +22,7 @@ public class FishingRod extends AbstractDescribableImpl<FishingRod> implements F
     @Extension @Symbol("rod")
     public static class DescriptorImpl extends Descriptor<FishingRod> {
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "fishing rod";
         }

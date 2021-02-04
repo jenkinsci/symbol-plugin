@@ -41,6 +41,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -97,7 +98,7 @@ public final class DescribableModel<T> implements Serializable {
      */
     private final Class<T> type;
 
-    private Map<String,DescribableParameter> parameters = new LinkedHashMap<String, DescribableParameter>(4);
+    private Map<String,DescribableParameter> parameters = new LinkedHashMap<>(4);
 
     /**
      * Read only view to {@link #parameters}
@@ -120,13 +121,13 @@ public final class DescribableModel<T> implements Serializable {
         if (mod != null && mod.type == clazz) {
             return mod;
         }
-        mod = new DescribableModel<T>(clazz);
+        mod = new DescribableModel<>(clazz);
         modelCache.put(clazz.getName(), mod);
         return mod;
     }
 
     /** Map class name to cached model. */
-    static ConcurrentHashMap<String, DescribableModel> modelCache = new ConcurrentHashMap<String, DescribableModel>();
+    static ConcurrentHashMap<String, DescribableModel> modelCache = new ConcurrentHashMap<>();
 
     /**
      * Loads a definition of the structure of a class: what kind of data
@@ -161,7 +162,7 @@ public final class DescribableModel<T> implements Serializable {
         }
 
         // rest of the properties will be sorted alphabetically
-        Map<String,DescribableParameter> rest = new TreeMap<String, DescribableParameter>();
+        Map<String,DescribableParameter> rest = new TreeMap<>();
 
         for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
             for (Field f : c.getDeclaredFields()) {
@@ -465,7 +466,7 @@ public final class DescribableModel<T> implements Serializable {
         } else if (o instanceof UninstantiatedDescribable) {
             return ((UninstantiatedDescribable)o).instantiate(erased, listener);
         } else if (o instanceof Map) {
-            Map<String,Object> m = new HashMap<String,Object>();
+            Map<String,Object> m = new HashMap<>();
             for (Map.Entry<?,?> entry : ((Map<?,?>) o).entrySet()) {
                 m.put((String) entry.getKey(), entry.getValue());
             }
@@ -580,7 +581,7 @@ public final class DescribableModel<T> implements Serializable {
      * Apply {@link #coerce(String, Type, Object, TaskListener)} method to a collection item.
      */
     private List<Object> coerceList(String context, Type type, List<?> list, TaskListener listener) throws Exception {
-        List<Object> r = new ArrayList<Object>();
+        List<Object> r = new ArrayList<>();
         for (Object elt : list) {
             r.add(coerce(context, type, elt, listener));
         }
@@ -604,7 +605,7 @@ public final class DescribableModel<T> implements Serializable {
     }
 
     static Set<Class<?>> findSubtypes(Class<?> supertype) {
-        Set<Class<?>> clazzes = new HashSet<Class<?>>();
+        Set<Class<?>> clazzes = new HashSet<>();
         // Jenkins.getDescriptorList does not work well since it is limited to descriptors declaring one supertype, and does not work at all for SimpleBuildStep.
         for (Descriptor<?> d : ExtensionList.lookup(Descriptor.class)) {
             if (supertype.isAssignableFrom(d.clazz)) {
@@ -648,9 +649,9 @@ public final class DescribableModel<T> implements Serializable {
         if (!type.isInstance(o))
             throw new IllegalArgumentException("Expected "+type+" but got an instance of "+o.getClass());
 
-        Map<String, Object> r = new TreeMap<String, Object>();
-        Map<String, Object> constructorOnlyDataBoundProps = new TreeMap<String, Object>();
-        Map<String, Object> nonDeprecatedDataBoundProps = new TreeMap<String, Object>();
+        Map<String, Object> r = new TreeMap<>();
+        Map<String, Object> constructorOnlyDataBoundProps = new TreeMap<>();
+        Map<String, Object> nonDeprecatedDataBoundProps = new TreeMap<>();
         for (DescribableParameter p : parameters.values()) {
             Object v = p.inspect(o);
             if (p.isRequired() && v==null) {
@@ -776,7 +777,7 @@ public final class DescribableModel<T> implements Serializable {
         for (Klass<?> c = Klass.java(type); c != null; c = c.getSuperClass()) {
             URL u = c.getResource(name);
             if (u != null) {
-                return IOUtils.toString(u, "UTF-8");
+                return IOUtils.toString(u, StandardCharsets.UTF_8);
             }
         }
         return null;
@@ -808,7 +809,7 @@ public final class DescribableModel<T> implements Serializable {
 
     @Override public String toString() {
         StringBuilder b = new StringBuilder();
-        toString(b, new Stack<Class<?>>());
+        toString(b, new Stack<>());
         return b.toString();
     }
 
@@ -848,7 +849,7 @@ public final class DescribableModel<T> implements Serializable {
         return defaultPrimitiveValue.get(type);
     }
 
-    private static final Map<Class,Object> defaultPrimitiveValue = new HashMap<Class, Object>();
+    private static final Map<Class,Object> defaultPrimitiveValue = new HashMap<>();
     static {
         defaultPrimitiveValue.put(boolean.class, false);
         defaultPrimitiveValue.put(byte.class, (byte) 0);
